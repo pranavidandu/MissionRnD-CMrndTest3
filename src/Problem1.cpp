@@ -49,8 +49,26 @@ struct node{
 	struct node *left;
 	struct node *right;
 };
-
-
+int inorder_recursive(struct node* root, int sum){
+	if (root == NULL)
+		return sum;
+	if (root->left != NULL){
+		sum = inorder_recursive(root->left, sum);
+	}
+	sum = sum - root->data;
+	printf("sum %d  root->data %d\n", sum, root->data);
+	if (root->right != NULL)
+		sum = inorder_recursive(root->right, sum);
+	return sum;
+}
+int missing_value(struct node *root, int n){
+	int sum = (n + 1)*(n + 2) / 2;
+	printf("sum %d\n", sum);
+	return inorder_recursive(root, sum);
+}
 int get_missing_value(struct node *root,int n){
-    return -1;
+	if (root == NULL || n <= 0)
+		return -1;
+	int res = missing_value(root, n);
+	return (res - 1) / 2;
 }

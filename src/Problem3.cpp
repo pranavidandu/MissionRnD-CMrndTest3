@@ -63,17 +63,78 @@ Helper Functions are optional to write
 */
 //Helper Functions Start
 int isOperator(char *data){
+	if (data[0] == 42 || data[0] == 45 || data[0] == 43)
+		return 1;
 	return 0;
 }
 int isOperand(char *data){
+	printf("data[0] %c\n", data[0]);
+	if (data[0] >= 48 && data[0] <= 57){
+		printf("true\n");
+		return 1;
+	}
+	printf("false\n");
 	return 0;
 }
 int getOperand(char *data){
+	int i = 0;
+	int num = 0;
+	while (data[i] >= 48 && data[i] <= 57){
+		num = num * 10;
+		num = num + ((int)data[i] - '0');
+		i++;
+	}
 	//converts data string to an integer "123" => 123
-	return 0;
+	return num;
+}
+void postorder_recursive(struct enode *root, int *result, char *op){
+	printf("im in\n");
+	if (root->left != NULL){
+		postorder_recursive(root->left, result, op);
+	}
+	if (isOperand(root->data)){
+		printf("is operand\n");
+		int temp = getOperand(root->data);
+		printf("temp %d result %d\n", temp, *result);
+		if (*op != NULL){
+			printf("op %c------\n", *op);
+			if (*op == '+'){
+				*result = *result + temp;
+			}
+			else if (*op == '-'){
+				*result = *result - temp;
+			}
+			else{
+				*result = *result * temp;
+			}
+		}
+		else{
+			*result = temp;
+		}
+
+	}
+	else{
+		if (isOperator(root->data)){
+			if (root->data[0] == '+')
+			*op = '+';
+		else if (root->data[0] == '-')
+			*op = '-';
+		else
+			*op = '*';
+		}
+	}
+	if (root->right != NULL){
+		postorder_recursive(root->right, result, op);
+	}
+	return;
 }
 //Helper Functions end
 int solve_tree(struct enode *root){
-    return -1;
+	if (root == NULL)
+	return -1;
+	int result = 0;
+	char op = NULL;
+	postorder_recursive(root, &result, &op);
+	return result;
 }
 
