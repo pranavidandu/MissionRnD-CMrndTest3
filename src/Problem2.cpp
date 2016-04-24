@@ -70,7 +70,29 @@ struct node{
 	struct node *left;
 	struct node *right;
 };
+void inorder_recursive(struct node *root, struct node_dll *head, int *flag){
+	if (root->left != NULL){
+		inorder_recursive(root->left, head, flag);
+	}
+	if (head->data == root->data){
+		head = head->next;
+	}
+	else{
+		*flag = 0;
+		return;
+	}
+	if (root->right != NULL){
+		inorder_recursive(root->right, head, flag);
+	}
 
+	return;
+}
 int is_identical(struct node_dll *head, struct node *root){
-	return -1;
+	int flag = 1;
+	if (head == NULL || root == NULL)
+		return -1;
+	inorder_recursive(root, head, &flag);
+	if (flag == 1)
+		return 1;
+	else return 0;
 }
